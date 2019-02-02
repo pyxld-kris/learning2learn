@@ -1,7 +1,34 @@
-// content.js
 function getElementByXpath(path) {
-  return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+	return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }
+
+
+// https://gist.github.com/kaizhu256/4482069
+function uuid4 () {
+    //// return uuid of form xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+    var uuid = '', ii;
+    for (ii = 0; ii < 32; ii += 1) {
+		switch (ii) {
+		case 8:
+		case 20:
+			uuid += '-';
+			uuid += (Math.random() * 16 | 0).toString(16);
+			break;
+		case 12:
+			uuid += '-';
+			uuid += '4';
+			break;
+		case 16:
+			uuid += '-';
+			uuid += (Math.random() * 4 | 8).toString(16);
+			break;
+		default:
+			uuid += (Math.random() * 16 | 0).toString(16);
+		}
+    }
+    return uuid;
+};
+
 
 var run_button_found = false;
 document.addEventListener("DOMNodeInserted", function(e) {
@@ -12,23 +39,18 @@ document.addEventListener("DOMNodeInserted", function(e) {
 		run_button_found = true;
 		run_button.addEventListener("click", function(e) {
 			var date = new Date();
-			// var xhr = new XMLHttpRequest();
-			// xhr.open("GET", url, true);
-			// xmlHttp.send( null );
-			// return xmlHttp.responseText;
 
 			var url = "https://script.google.com/macros/s/AKfycbwAjdmugDGrK15wIsAk4szFpfGlHfjvQvxVBKcntc0AkJD0IFA/exec"
-			var jqxhr = $.ajax({
+			$.ajax({
 				url: url,
 				method: "GET",
 				dataType: "json",
 				data: {
 					"code": document.getElementsByClassName("ace_text-layer")[0].innerText,
 					"timestamp": date
-				}.serializeObject()
-			}).success(
-				console.log("Sent data")
-			);
+				}
+				user: uuid4(),
+			});
 
 			// TODO scale out by using google datastore
 			// var xhr = new XMLHttpRequest();
