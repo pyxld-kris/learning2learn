@@ -8,6 +8,8 @@
     //recommended
     "description": "Logs data from repl.it for the learning2learn grant",
 
+	"permissions": [ "storage" ],
+
 	"content_scripts": [{
 		"matches": [
 			"http://repl.it/*",

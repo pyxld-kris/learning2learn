@@ -1,34 +1,28 @@
+function uuid() {
+  var uuid = "", i, random;
+  for (i = 0; i < 32; i++) {
+    random = Math.random() * 16 | 0;
+
+    if (i == 8 || i == 12 || i == 16 || i == 20) {
+      uuid += "-"
+    }
+    uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
+  }
+  return uuid;
+}
+
+var userid;
+chrome.storage.sync.get('userid', function(items) {
+    userid = items.userid;
+    if (!userid) {
+        userid = uuid();
+        chrome.storage.sync.set({userid: userid});
+	}
+});
+
 function getElementByXpath(path) {
 	return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }
-
-
-// https://gist.github.com/kaizhu256/4482069
-function uuid4 () {
-    //// return uuid of form xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
-    var uuid = '', ii;
-    for (ii = 0; ii < 32; ii += 1) {
-		switch (ii) {
-		case 8:
-		case 20:
-			uuid += '-';
-			uuid += (Math.random() * 16 | 0).toString(16);
-			break;
-		case 12:
-			uuid += '-';
-			uuid += '4';
-			break;
-		case 16:
-			uuid += '-';
-			uuid += (Math.random() * 4 | 8).toString(16);
-			break;
-		default:
-			uuid += (Math.random() * 16 | 0).toString(16);
-		}
-    }
-    return uuid;
-};
-
 
 var run_button_found = false;
 document.addEventListener("DOMNodeInserted", function(e) {
@@ -37,6 +31,7 @@ document.addEventListener("DOMNodeInserted", function(e) {
 
 	if((run_button != null) && !run_button_found) {
 		run_button_found = true;
+
 		run_button.addEventListener("click", function(e) {
 			var date = new Date();
 
@@ -47,9 +42,10 @@ document.addEventListener("DOMNodeInserted", function(e) {
 				dataType: "json",
 				data: {
 					"code": document.getElementsByClassName("ace_text-layer")[0].innerText,
-					"timestamp": date
+					"timestamp": date,
+					"userid": userid,
+					"name": "Anonymous"
 				}
-				user: uuid4(),
 			});
 
 			// TODO scale out by using google datastore
