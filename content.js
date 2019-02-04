@@ -20,39 +20,53 @@ chrome.storage.sync.get('userid', function(items) {
 	}
 });
 
-function getElementByXpath(path) {
-	return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-}
-
 var run_button_found = false;
 document.addEventListener("DOMNodeInserted", function(e) {
 	// TODO use the span element to find the run button
-	run_button = getElementByXpath('//*[@id="root"]/div/div[2]/div[2]/section[1]/div/section[1]/div[2]/div/div[3]/div/div[1]/div/div/div');
+  run_button = $('.ws-header-cta').get(0);
 
 	if((run_button != null) && !run_button_found) {
+    if (run_button.innerHTML.indexOf('run') == -1) {
+      // Wait for the run button to fully initialize
+      return;
+    }
 		run_button_found = true;
+		run_button.addEventListener("click", function(e) { // The run button has been clicked
+      run_button_found = false; // The button seems to be removed from the page with each click, so must be refound after each run
 
-		run_button.addEventListener("click", function(e) {
-			var date = new Date();
+      // First, check if the button click should result in running code in the IDE area
+      // (checking inner html of the button to see if it's currently displaying the word 'run')
+      var clickedElement = e.target || e.srcElement;
+      if (clickedElement.innerHTML.indexOf('run') == -1) {
+        // The button isn't displaying run, so block this function from fully executing
+        console.log('exiting early');
+        return;
+      }
+      else {
+        console.log('executing fully');
+      }
 
-			var url = "https://script.google.com/macros/s/AKfycbwAjdmugDGrK15wIsAk4szFpfGlHfjvQvxVBKcntc0AkJD0IFA/exec"
-			$.ajax({
-				url: url,
-				method: "GET",
-				dataType: "json",
-				data: {
-					"code": document.getElementsByClassName("ace_text-layer")[0].innerText,
-					"timestamp": date,
-					"userid": userid,
-					"name": "Anonymous"
-				}
-			});
+      if (document.getElementsByClassName("ace_text-layer")[0] != undefined) {
+        // Checking to see if we have the right code editor here in the page (error was being thrown while testing on a different repl.it page)
+
+        var date = new Date();
+  			var url = "https://script.google.com/macros/s/AKfycbwAjdmugDGrK15wIsAk4szFpfGlHfjvQvxVBKcntc0AkJD0IFA/exec"
+  			$.ajax({
+  				url: url,
+  				method: "GET",
+  				dataType: "json",
+  				data: {
+  					"code": document.getElementsByClassName("ace_text-layer")[0].innerText,
+  					"timestamp": date,
+  					"userid": userid,
+  					"name": "Anonymous"
+  				}
+  			});
+      }
 
 			// TODO scale out by using google datastore
 			// var xhr = new XMLHttpRequest();
 			// xhr.open('POST', 'https://datastore.googleapis.com/v1/projects/my-project-1533510475410:beginTransaction', true);
-
-
 		}, false);
 	}
 }, false);
