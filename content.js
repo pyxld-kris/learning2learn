@@ -35,7 +35,7 @@ document.addEventListener("DOMNodeInserted", function(e) {
 		run_button.addEventListener("click", function(e) {
 			var date = new Date();
 
-			var url = "https://script.google.com/macros/s/AKfycbwAjdmugDGrK15wIsAk4szFpfGlHfjvQvxVBKcntc0AkJD0IFA/exec"
+			var url = "https://script.google.com/macros/s/AKfycbzt7vR7Ks0HoGlZ5bKFP8A-oTwA1gPpTi2EdhpqDkiY1sEDoiJ8/exec"
 			$.ajax({
 				url: url,
 				method: "GET",
