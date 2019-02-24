@@ -46,12 +46,11 @@ document.addEventListener("DOMNodeInserted", function(e) {
         console.log('executing fully');
       }
 
-<<<<<<< HEAD
       if (document.getElementsByClassName("ace_text-layer")[0] != undefined) {
         // Checking to see if we have the right code editor here in the page (error was being thrown while testing on a different repl.it page)
 
         var date = new Date();
-  			var url = "https://script.google.com/macros/s/AKfycbwAjdmugDGrK15wIsAk4szFpfGlHfjvQvxVBKcntc0AkJD0IFA/exec"
+  			var url = "https://script.google.com/macros/s/AKfycbzt7vR7Ks0HoGlZ5bKFP8A-oTwA1gPpTi2EdhpqDkiY1sEDoiJ8/exec"
   			$.ajax({
   				url: url,
   				method: "GET",
@@ -64,23 +63,6 @@ document.addEventListener("DOMNodeInserted", function(e) {
   				}
   			});
       }
-=======
-		run_button.addEventListener("click", function(e) {
-			var date = new Date();
-
-			var url = "https://script.google.com/macros/s/AKfycbzt7vR7Ks0HoGlZ5bKFP8A-oTwA1gPpTi2EdhpqDkiY1sEDoiJ8/exec"
-			$.ajax({
-				url: url,
-				method: "GET",
-				dataType: "json",
-				data: {
-					"code": document.getElementsByClassName("ace_text-layer")[0].innerText,
-					"timestamp": date,
-					"userid": userid,
-					"name": "Anonymous"
-				}
-			});
->>>>>>> d380fc20f8e570a3201c084ce84d9aa4df00f5f6
 
 			// TODO scale out by using google datastore
 			// var xhr = new XMLHttpRequest();
