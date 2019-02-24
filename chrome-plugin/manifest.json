@@ -17,6 +17,7 @@
 		],
 		"js": [
 			"jquery-3.3.1.min.js",
+  		"notify.js",
 			"content.js"
 		],
 		"run_at": "document_end"
